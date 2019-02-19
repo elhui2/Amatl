@@ -57,8 +57,8 @@ class _BookEditState extends State<BookEdit> {
         initialValue: book == null ? '' : book.description,
         validator: (String value) {
           // if (value.trim().length <= 0) {
-          if (value.isEmpty || value.length < 40) {
-            return 'La descripción es requerida y debe contener al menos 40+ caracteres';
+          if (value.isEmpty || value.length < 30) {
+            return 'La descripción es requerida y debe contener al menos 30+ caracteres';
           }
         },
         onSaved: (String value) {
@@ -77,8 +77,8 @@ class _BookEditState extends State<BookEdit> {
         initialValue: book == null ? '' : book.author,
         validator: (String value) {
           // if (value.trim().length <= 0) {
-          if (value.isEmpty || value.length < 5) {
-            return 'El autor es requerido y debe tener al menos 5+ caracteres';
+          if (value.isEmpty || value.length < 4) {
+            return 'El autor es requerido y debe tener al menos 4+ caracteres';
           }
         },
         onSaved: (String value) {
@@ -97,7 +97,6 @@ class _BookEditState extends State<BookEdit> {
         decoration: InputDecoration(labelText: 'Precio del libro'),
         initialValue: book == null ? '' : book.price.toString(),
         validator: (String value) {
-          // if (value.trim().length <= 0) {
           if (value.isEmpty ||
               !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
             return 'El precio es requerido y debe ser numero.';
@@ -146,14 +145,6 @@ class _BookEditState extends State<BookEdit> {
                 height: 10.0,
               ),
               _buildSubmitButton(),
-              // GestureDetector(
-              //   onTap: _submitForm,
-              //   child: Container(
-              //     color: Colors.green,
-              //     padding: EdgeInsets.all(5.0),
-              //     child: Text('My Button'),
-              //   ),
-              // )
             ],
           ),
         ),

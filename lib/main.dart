@@ -5,8 +5,8 @@ import 'package:scoped_model/scoped_model.dart';
 
 import './pages/auth.dart';
 import './pages/books_admin.dart';
-import './pages/products.dart';
-import './pages/product.dart';
+import './pages/books.dart';
+import './pages/book.dart';
 import './scoped-models/main.dart';
 
 void main() {
@@ -41,24 +41,25 @@ class _MyAppState extends State<MyApp> {
           // '/products': (BuildContext context) => ProductsPage(),
           // '/admin': (BuildContext context) => ProductsAdminPage(),
           '/': (BuildContext context) => AuthPage(),
+          '/books': (BuildContext context) => BooksPage(),
           '/admin': (BuildContext context) => BooksAdmin(),
         },
         onGenerateRoute: (RouteSettings settings) {
-          // final List<String> pathElements = settings.name.split('/');
-          // if (pathElements[0] != '') {
-          //   return null;
-          // }
-          // if (pathElements[1] == 'product') {
-          //   final int index = int.parse(pathElements[2]);
-          //   return MaterialPageRoute<bool>(
-          //     builder: (BuildContext context) => ProductPage(index),
-          //   );
-          // }
-          // return null;
+          final List<String> pathElements = settings.name.split('/');
+          if (pathElements[0] != '') {
+            return null;
+          }
+          if (pathElements[1] == 'product') {
+            final int index = int.parse(pathElements[2]);
+            return MaterialPageRoute<bool>(
+              builder: (BuildContext context) => BookView(index),
+            );
+          }
+          return null;
         },
         onUnknownRoute: (RouteSettings settings) {
-          // return MaterialPageRoute(
-          //     builder: (BuildContext context) => ProductsPage());
+          return MaterialPageRoute(
+          builder: (BuildContext context) => BooksPage());
         },
       ),
     );

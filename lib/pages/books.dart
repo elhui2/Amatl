@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-
 import 'package:scoped_model/scoped_model.dart';
 
-import '../widgets/products/products.dart';
+import '../widgets/books/books.dart';
 import '../scoped-models/main.dart';
 
-class ProductsPage extends StatelessWidget {
+class BooksPage extends StatelessWidget {
   Widget _buildSideDrawer(BuildContext context) {
     return Drawer(
       child: Column(
         children: <Widget>[
           AppBar(
             automaticallyImplyLeading: false,
-            title: Text('Choose'),
+            title: Text('Seleccionar'),
           ),
           ListTile(
             leading: Icon(Icons.edit),
-            title: Text('Manage Products'),
+            title: Text('Administrar Libros'),
             onTap: () {
               Navigator.pushReplacementNamed(context, '/admin');
             },
@@ -31,7 +30,7 @@ class ProductsPage extends StatelessWidget {
     return Scaffold(
       drawer: _buildSideDrawer(context),
       appBar: AppBar(
-        title: Text('EasyList'),
+        title: Text('Todas las librerias'),
         actions: <Widget>[
           ScopedModelDescendant<MainModel>(
             builder: (BuildContext context, Widget child, MainModel model) {
@@ -47,7 +46,7 @@ class ProductsPage extends StatelessWidget {
           )
         ],
       ),
-      body: Products(),
+      body: Books(),
     );
   }
 }

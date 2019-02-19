@@ -1,17 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-
 import 'package:scoped_model/scoped_model.dart';
-
 import '../widgets/ui_elements/title_default.dart';
-import '../models/product.dart';
+import '../models/book.dart';
 import '../scoped-models/main.dart';
 
-class ProductPage extends StatelessWidget {
-  final int productIndex;
+class BookView extends StatelessWidget {
+  final int bookIndex;
 
-  ProductPage(this.productIndex);
+  BookView(this.bookIndex);
 
   Widget _buildAddressPriceRow(double price) {
     return Row(
@@ -44,24 +41,24 @@ class ProductPage extends StatelessWidget {
       return Future.value(false);
     }, child: ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        final Product product = model.allProducts[productIndex];
+        final Book book = model.allBooks[bookIndex];
         return Scaffold(
           appBar: AppBar(
-            title: Text(product.title),
+            title: Text(book.title),
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(product.image),
+              Image.asset(book.image),
               Container(
                 padding: EdgeInsets.all(10.0),
-                child: TitleDefault(product.title),
+                child: TitleDefault(book.title),
               ),
-              _buildAddressPriceRow(product.price),
+              _buildAddressPriceRow(book.price),
               Container(
                 padding: EdgeInsets.all(10.0),
                 child: Text(
-                  product.description,
+                  book.description,
                   textAlign: TextAlign.center,
                 ),
               )

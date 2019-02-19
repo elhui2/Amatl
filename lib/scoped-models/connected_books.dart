@@ -70,8 +70,8 @@ mixin BooksModel on ConnectedBooksModel {
     return _showFavorites;
   }
 
-  void updateBook(
-      String title, String description,String author, String image, double price) {
+  void updateBook(String title, String description, String author, String image,
+      double price) {
     final Book updatedBook = Book(
         title: title,
         description: description,
