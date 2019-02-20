@@ -80,7 +80,7 @@ class _AuthPageState extends State<AuthPage> {
     }
     _formKey.currentState.save();
     login(_formData['email'], _formData['password']);
-    Navigator.pushReplacementNamed(context, '/admin');
+    Navigator.pushReplacementNamed(context, '/books');
   }
 
   @override
