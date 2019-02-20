@@ -19,7 +19,9 @@ class ConnectedBooksModel extends Model {
       'author': author,
       'image':
           'https://a.1stdibscdn.com/archivesE/upload/8141/932/XXX_8141_1349205668_1.jpg',
-      'price': price
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id
     };
     http
         .post('https://amatl-72008.firebaseio.com/books.json',
@@ -108,6 +110,30 @@ mixin BooksModel on ConnectedBooksModel {
   void selectBook(int index) {
     _selBookIndex = index;
     notifyListeners();
+  }
+
+  void fetchBooks() {
+    http
+        .get('https://amatl-72008.firebaseio.com/books.json')
+        .then((http.Response response) {
+      final Map<String, dynamic> bookListData =
+          jsonDecode(response.body);
+      final List<Book> fetchBookList = [];
+      bookListData.forEach((String bookId, dynamic bookData) {
+        final Book book = Book(
+            id: bookId,
+            title: bookData['title'],
+            description: bookData['description'],
+            author: bookData['author'],
+            image: bookData['image'],
+            price: bookData['price'],
+            userEmail: bookData['userEmail'],
+            userId: bookData['userId']);
+        fetchBookList.add(book);
+      });
+      _books = fetchBookList;
+      notifyListeners();
+    });
   }
 
   void toggleDisplayMode() {

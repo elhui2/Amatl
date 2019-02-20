@@ -4,7 +4,24 @@ import 'package:scoped_model/scoped_model.dart';
 import '../widgets/books/books.dart';
 import '../scoped-models/main.dart';
 
-class BooksPage extends StatelessWidget {
+class BooksPage extends StatefulWidget {
+  final MainModel model;
+
+  BooksPage(this.model);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _BooksPageState();
+  }
+}
+
+class _BooksPageState extends State<BooksPage> {
+  @override
+  initState() {
+    widget.model.fetchBooks();
+    super.initState();
+  }
+
   Widget _buildSideDrawer(BuildContext context) {
     return Drawer(
       child: Column(

@@ -45,7 +45,7 @@ class BookList extends StatelessWidget {
                   ListTile(
                     leading: CircleAvatar(
                       backgroundImage:
-                          AssetImage(model.allBooks[index].image),
+                          NetworkImage(model.allBooks[index].image),
                     ),
                     title: Text(model.allBooks[index].title),
                     subtitle:
