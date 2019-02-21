@@ -8,7 +8,7 @@ El proyecto se conecta a una DB de Google Firebase.
 
 ### Notas de esta version
 
-El CRUD de libros esta completo
-En la pagina principal se recarga jalando la pantalla hacia abajo
-Cambio de colores
-Cambio de appicon
+    El CRUD de libros esta completo
+    En la pagina principal se recarga jalando la pantalla hacia abajo
+    Cambio de colores
+    Cambio de appicon
