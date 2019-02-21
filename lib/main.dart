@@ -33,9 +33,9 @@ class _MyAppState extends State<MyApp> {
         // debugShowMaterialGrid: true,
         theme: ThemeData(
             brightness: Brightness.light,
-            primarySwatch: Colors.deepOrange,
-            accentColor: Colors.deepPurple,
-            buttonColor: Colors.deepPurple),
+            primarySwatch: Colors.blueGrey,
+            accentColor: Colors.blueGrey,
+            buttonColor: Colors.blueGrey),
         // home: AuthPage(),
         routes: {
           // '/': (BuildContext context) => AuthPage(),
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
           // '/admin': (BuildContext context) => ProductsAdminPage(),
           '/': (BuildContext context) => AuthPage(),
           '/books': (BuildContext context) => BooksPage(model),
-          '/admin': (BuildContext context) => BooksAdmin(),
+          '/admin': (BuildContext context) => BooksAdmin(model),
         },
         onGenerateRoute: (RouteSettings settings) {
           final List<String> pathElements = settings.name.split('/');

@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:async';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,9 +10,12 @@ class ConnectedBooksModel extends Model {
   List<Book> _books = [];
   int _selBookIndex;
   User _authenticatedUser;
+  bool _isLoading = false;
 
-  void addBook(String title, String description, String author, String image,
-      double price) {
+  Future<Null> addBook(String title, String description, String author,
+      String image, double price) {
+    _isLoading = true;
+    notifyListeners();
     final Map<String, dynamic> bookData = {
       'title': title,
       'description': description,
@@ -23,7 +26,7 @@ class ConnectedBooksModel extends Model {
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id
     };
-    http
+    return http
         .post('https://amatl-72008.firebaseio.com/books.json',
             body: json.encode(bookData))
         .then((http.Response response) {
@@ -38,6 +41,7 @@ class ConnectedBooksModel extends Model {
           userEmail: _authenticatedUser.email,
           userId: _authenticatedUser.id);
       _books.add(newProduct);
+      _isLoading = false;
       notifyListeners();
     });
   }
@@ -72,23 +76,50 @@ mixin BooksModel on ConnectedBooksModel {
     return _showFavorites;
   }
 
-  void updateBook(String title, String description, String author, String image,
-      double price) {
-    final Book updatedBook = Book(
-        title: title,
-        description: description,
-        author: author,
-        image: image,
-        price: price,
-        userEmail: selectedBook.userEmail,
-        userId: selectedBook.userId);
-    _books[selectedBookIndex] = updatedBook;
-    notifyListeners();
+  Future<Null> updateBook(String title, String description, String author,
+      String image, double price) {
+    final Map<String, dynamic> updateData = {
+      'title': title,
+      'description': description,
+      'author': author,
+      'image':
+          'https://s3-us-west-1.amazonaws.com/cdn.rebootproject.mx/amatl/image_404.jpg',
+      'price': price,
+      'userEmail': selectedBook.userEmail,
+      'userId': selectedBook.userId
+    };
+    return http
+        .put('https://amatl-72008.firebaseio.com/books/${selectedBook.id}.json',
+            body: jsonEncode(updateData))
+        .then((_) {
+      _isLoading = false;
+      final Book updatedBook = Book(
+          id: selectedBook.id,
+          title: title,
+          description: description,
+          author: author,
+          image: image,
+          price: price,
+          userEmail: selectedBook.userEmail,
+          userId: selectedBook.userId);
+      _books[selectedBookIndex] = updatedBook;
+      notifyListeners();
+    });
   }
 
   void deleteBook() {
+    _isLoading = true;
+    final String deletedBookId = selectedBook.id;
     _books.removeAt(selectedBookIndex);
+    _selBookIndex = null;
     notifyListeners();
+    http
+        .delete(
+            'https://amatl-72008.firebaseio.com/books/${deletedBookId}.json')
+        .then((http.Response response) {
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 
   void toggleProductFavoriteStatus() {
@@ -112,12 +143,18 @@ mixin BooksModel on ConnectedBooksModel {
     notifyListeners();
   }
 
-  void fetchBooks() {
-    http
+  Future<Null> fetchBooks() {
+    _isLoading = true;
+    return http
         .get('https://amatl-72008.firebaseio.com/books.json')
         .then((http.Response response) {
-      final Map<String, dynamic> bookListData =
-          jsonDecode(response.body);
+      final Map<String, dynamic> bookListData = jsonDecode(response.body);
+      print(bookListData);
+      if (bookListData == null) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
       final List<Book> fetchBookList = [];
       bookListData.forEach((String bookId, dynamic bookData) {
         final Book book = Book(
@@ -132,6 +169,7 @@ mixin BooksModel on ConnectedBooksModel {
         fetchBookList.add(book);
       });
       _books = fetchBookList;
+      _isLoading = false;
       notifyListeners();
     });
   }
@@ -142,9 +180,15 @@ mixin BooksModel on ConnectedBooksModel {
   }
 }
 
-mixin UserModel on ConnectedBooksModel {
+class UserModel extends ConnectedBooksModel {
   void login(String email, String password) {
     _authenticatedUser =
         User(id: 'fdalsdfasf', email: email, password: password);
+  }
+}
+
+class UtilityModel extends ConnectedBooksModel {
+  bool get isLoading {
+    return _isLoading;
   }
 }

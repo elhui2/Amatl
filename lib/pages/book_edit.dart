@@ -36,8 +36,8 @@ class _BookEditState extends State<BookEdit> {
         initialValue: book == null ? '' : book.title,
         validator: (String value) {
           // if (value.trim().length <= 0) {
-          if (value.isEmpty || value.length < 5) {
-            return 'El título es requerido y debe contener al menos 4+ caracteres';
+          if (value.isEmpty || value.length < 4) {
+            return 'El título es requerido y debe tener 4+ caracteres';
           }
         },
         onSaved: (String value) {
@@ -57,8 +57,8 @@ class _BookEditState extends State<BookEdit> {
         initialValue: book == null ? '' : book.description,
         validator: (String value) {
           // if (value.trim().length <= 0) {
-          if (value.isEmpty || value.length < 30) {
-            return 'La descripción es requerida y debe contener al menos 30+ caracteres';
+          if (value.isEmpty || value.length < 20) {
+            return 'La descripción es requerida y debe tener 20+ caracteres';
           }
         },
         onSaved: (String value) {
@@ -78,7 +78,7 @@ class _BookEditState extends State<BookEdit> {
         validator: (String value) {
           // if (value.trim().length <= 0) {
           if (value.isEmpty || value.length < 4) {
-            return 'El autor es requerido y debe tener al menos 4+ caracteres';
+            return 'El autor es requerido y debe tener 4+ caracteres';
           }
         },
         onSaved: (String value) {
@@ -112,12 +112,14 @@ class _BookEditState extends State<BookEdit> {
   Widget _buildSubmitButton() {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        return RaisedButton(
-          child: Text('Save'),
-          textColor: Colors.white,
-          onPressed: () => _submitForm(model.addBook, model.updateBook,
-              model.selectBook, model.selectedBookIndex),
-        );
+        return model.isLoading
+            ? Center(child: CircularProgressIndicator())
+            : RaisedButton(
+                child: Text('Save'),
+                textColor: Colors.white,
+                onPressed: () => _submitForm(model.addBook, model.updateBook,
+                    model.selectBook, model.selectedBookIndex),
+              );
       },
     );
   }
@@ -166,7 +168,10 @@ class _BookEditState extends State<BookEdit> {
         _formData['author'],
         _formData['image'],
         _formData['price'],
-      );
+      ).then((_) {
+        Navigator.pushReplacementNamed(context, '/books')
+            .then((_) => setSelectedBook(null));
+      });
     } else {
       updateBook(
         _formData['title'],
@@ -174,11 +179,11 @@ class _BookEditState extends State<BookEdit> {
         _formData['author'],
         _formData['image'],
         _formData['price'],
-      );
+      ).then((_) {
+        Navigator.pushReplacementNamed(context, '/books')
+            .then((_) => setSelectedBook(null));
+      });
     }
-
-    Navigator.pushReplacementNamed(context, '/books')
-        .then((_) => setSelectedBook(null));
   }
 
   @override

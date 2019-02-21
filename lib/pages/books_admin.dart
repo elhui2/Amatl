@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 import './book_edit.dart';
 import './book_list.dart';
+import '../scoped-models/main.dart';
 
 class BooksAdmin extends StatelessWidget {
+  final MainModel model;
+
+  BooksAdmin(this.model);
+
   Widget _buildSideDrawer(BuildContext context) {
     return Drawer(
       child: Column(
@@ -46,7 +51,7 @@ class BooksAdmin extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: <Widget>[BookEdit(), BookList()],
+          children: <Widget>[BookEdit(), BookList(model)],
         ),
       ),
     );

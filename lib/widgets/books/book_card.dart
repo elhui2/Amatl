@@ -62,7 +62,10 @@ class BookCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.network(book.image),
+          FadeInImage(
+            image: NetworkImage(book.image),
+            placeholder: AssetImage('assets/food.jpg'),
+          ),
           _buildTitlePriceRow(),
           AddressTag(book.author),
           Text(book.userEmail),

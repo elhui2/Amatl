@@ -49,7 +49,7 @@ class BookView extends StatelessWidget {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(book.image),
+              Image.network(book.image),
               Container(
                 padding: EdgeInsets.all(10.0),
                 child: TitleDefault(book.title),

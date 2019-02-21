@@ -63,7 +63,23 @@ class _BooksPageState extends State<BooksPage> {
           )
         ],
       ),
-      body: Books(),
+      body: _buildBookList(),
+    );
+  }
+
+  Widget _buildBookList() {
+    return ScopedModelDescendant(
+      builder: (BuildContext contest, Widget child, MainModel model) {
+        print(model.isLoading);
+        Widget content =
+            Center(child: Text("¡No has agregado libros todavía!"));
+        if (model.displayedBooks.length >= 0 && !model.isLoading) {
+          content = Books();
+        } else if (model.isLoading) {
+          content = Center(child: CircularProgressIndicator());
+        }
+        return RefreshIndicator(onRefresh: model.fetchBooks, child: content);
+      },
     );
   }
 }

@@ -1,8 +1,14 @@
 # Amatl
-## Version 0.2
+## Version 0.4
+
+Info:
 
 Biblioteca personal - Proyecto para un curso de Flutter.
+El proyecto se conecta a una DB de Google Firebase.
 
-## Notas
+### Notas de esta version
 
-El proyecto se conecta a una base de datos de Google Firebase.
+El CRUD de libros esta completo
+En la pagina principal se recarga jalando la pantalla hacia abajo
+Cambio de colores
+Cambio de appicon

@@ -4,7 +4,23 @@ import 'package:scoped_model/scoped_model.dart';
 import './book_edit.dart';
 import '../scoped-models/main.dart';
 
-class BookList extends StatelessWidget {
+class BookList extends StatefulWidget {
+
+  final MainModel model;
+  BookList(this.model);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _BookListState();
+  }
+}
+
+class _BookListState extends State<BookList> {
+  @override
+  initState(){
+    widget.model.fetchBooks();
+    super.initState();
+  }
   Widget _buildEditButton(BuildContext context, int index, MainModel model) {
     return IconButton(
       icon: Icon(Icons.edit),
