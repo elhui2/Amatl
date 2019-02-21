@@ -3,6 +3,7 @@
 
 Info:
 
+A partir de la version 0.4.5 se utilizan ids primarios en strings
 Biblioteca personal - Proyecto para un curso de Flutter.
 El proyecto se conecta a una DB de Google Firebase.
 
