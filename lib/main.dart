@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:scoped_model/scoped_model.dart';
-// import 'package:flutter/rendering.dart';
 
 import './pages/auth.dart';
 import './pages/books_admin.dart';
@@ -10,9 +9,6 @@ import './pages/book.dart';
 import './scoped-models/main.dart';
 
 void main() {
-  // debugPaintSizeEnabled = true;
-  // debugPaintBaselinesEnabled = true;
-  // debugPaintPointersEnabled = true;
   runApp(MyApp());
 }
 
@@ -30,17 +26,12 @@ class _MyAppState extends State<MyApp> {
     return ScopedModel<MainModel>(
       model: model,
       child: MaterialApp(
-        // debugShowMaterialGrid: true,
         theme: ThemeData(
             brightness: Brightness.light,
             primarySwatch: Colors.blueGrey,
             accentColor: Colors.blueGrey,
             buttonColor: Colors.blueGrey),
-        // home: AuthPage(),
         routes: {
-          // '/': (BuildContext context) => AuthPage(),
-          // '/products': (BuildContext context) => ProductsPage(),
-          // '/admin': (BuildContext context) => ProductsAdminPage(),
           '/': (BuildContext context) => AuthPage(),
           '/books': (BuildContext context) => BooksPage(model),
           '/admin': (BuildContext context) => BooksAdmin(model),
