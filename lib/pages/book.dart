@@ -6,9 +6,9 @@ import '../models/book.dart';
 import '../scoped-models/main.dart';
 
 class BookView extends StatelessWidget {
-  final int bookIndex;
+  final Book book;
 
-  BookView(this.bookIndex);
+  BookView(this.book);
 
   Widget _buildAddressPriceRow(double price) {
     return Row(
@@ -35,37 +35,38 @@ class BookView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(onWillPop: () {
-      print('Back button pressed!');
-      Navigator.pop(context, false);
-      return Future.value(false);
-    }, child: ScopedModelDescendant<MainModel>(
-      builder: (BuildContext context, Widget child, MainModel model) {
-        final Book book = model.allBooks[bookIndex];
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(book.title),
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image.network(book.image),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: TitleDefault(book.title),
-              ),
-              _buildAddressPriceRow(book.price),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  book.description,
-                  textAlign: TextAlign.center,
-                ),
-              )
-            ],
-          ),
-        );
+    return WillPopScope(
+      onWillPop: () {
+        print('Back button pressed!');
+        Navigator.pop(context, false);
+        return Future.value(false);
       },
-    ));
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(book.title),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            FadeInImage(
+              image: NetworkImage(book.image),
+              placeholder: AssetImage('assets/food.jpg'),
+            ),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: TitleDefault(book.title),
+            ),
+            _buildAddressPriceRow(book.price),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                book.description,
+                textAlign: TextAlign.center,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

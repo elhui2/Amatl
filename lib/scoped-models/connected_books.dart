@@ -6,9 +6,15 @@ import 'package:http/http.dart' as http;
 import '../models/book.dart';
 import '../models/user.dart';
 
+/**
+ * ConnectedBooksModel
+ * @version 0.5
+ * @author Daniel Huidobro <daniel@rebootproject.mx>
+ * Modelo de libros y modelo proncipal del App
+ */
 class ConnectedBooksModel extends Model {
   List<Book> _books = [];
-  int _selBookIndex;
+  String _selBookId;
   User _authenticatedUser;
   bool _isLoading = false;
 
@@ -61,21 +67,28 @@ mixin BooksModel on ConnectedBooksModel {
     return List.from(_books);
   }
 
-  int get selectedBookIndex {
-    return _selBookIndex;
+  String get selectedBookId {
+    return _selBookId;
   }
 
   Book get selectedBook {
-    if (selectedBookIndex == null) {
+    if (_selBookId == null) {
       return null;
     }
-    return _books[selectedBookIndex];
+    return _books.firstWhere((Book book) {
+      return book.id == _selBookId;
+    });
   }
 
   bool get displayFavoritesOnly {
     return _showFavorites;
   }
 
+  int get selectedBookIndex { 
+    return _books.indexWhere((Book book) {
+      return book.id == _selBookId;
+    });
+  }
   Future<Null> updateBook(String title, String description, String author,
       String image, double price) {
     final Map<String, dynamic> updateData = {
@@ -111,7 +124,7 @@ mixin BooksModel on ConnectedBooksModel {
     _isLoading = true;
     final String deletedBookId = selectedBook.id;
     _books.removeAt(selectedBookIndex);
-    _selBookIndex = null;
+    _selBookId = null;
     notifyListeners();
     http
         .delete(
@@ -122,10 +135,11 @@ mixin BooksModel on ConnectedBooksModel {
     });
   }
 
-  void toggleProductFavoriteStatus() {
+  void toggleBookFavoriteStatus() {
     final bool isCurrentlyFavorite = selectedBook.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Book updatedProduct = Book(
+        id: selectedBook.id,
         title: selectedBook.title,
         description: selectedBook.description,
         author: selectedBook.author,
@@ -138,8 +152,8 @@ mixin BooksModel on ConnectedBooksModel {
     notifyListeners();
   }
 
-  void selectBook(int index) {
-    _selBookIndex = index;
+  void selectBook(String bookId) {
+    _selBookId = bookId;
     notifyListeners();
   }
 

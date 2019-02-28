@@ -25,7 +25,7 @@ class _BookListState extends State<BookList> {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
-        model.selectBook(index);
+        model.selectBook(model.allBooks[index].id);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context) {
@@ -47,7 +47,7 @@ class _BookListState extends State<BookList> {
               key: Key(model.allBooks[index].title),
               onDismissed: (DismissDirection direction) {
                 if (direction == DismissDirection.endToStart) {
-                  model.selectBook(index);
+                  model.selectBook(model.allBooks[index].id);
                   model.deleteBook();
                 } else if (direction == DismissDirection.startToEnd) {
                   print('Swiped start to end');

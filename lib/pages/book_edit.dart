@@ -160,7 +160,7 @@ class _BookEditState extends State<BookEdit> {
       return;
     }
     _formKey.currentState.save();
-    if (selectedBookIndex == null) {
+    if (selectedBookIndex == -1) {
       addBook(
         _formData['title'],
         _formData['description'],
@@ -191,7 +191,8 @@ class _BookEditState extends State<BookEdit> {
       builder: (BuildContext context, Widget child, MainModel model) {
         final Widget pageContent =
             _buildPageContent(context, model.selectedBook);
-        return model.selectedBookIndex == null
+            print(model.selectedBookIndex);
+        return model.selectedBookIndex == -1
             ? pageContent
             : Scaffold(
                 appBar: AppBar(
