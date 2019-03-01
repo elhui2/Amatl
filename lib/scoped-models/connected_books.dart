@@ -18,7 +18,7 @@ class ConnectedBooksModel extends Model {
   User _authenticatedUser;
   bool _isLoading = false;
 
-  Future<Null> addBook(String title, String description, String author,
+  Future<bool> addBook(String title, String description, String author,
       String image, double price) {
     _isLoading = true;
     notifyListeners();
@@ -36,6 +36,11 @@ class ConnectedBooksModel extends Model {
         .post('https://amatl-72008.firebaseio.com/books.json',
             body: json.encode(bookData))
         .then((http.Response response) {
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
       final Map<String, dynamic> responseData = json.decode(response.body);
       final Book newProduct = Book(
           id: responseData['name'],
@@ -49,6 +54,7 @@ class ConnectedBooksModel extends Model {
       _books.add(newProduct);
       _isLoading = false;
       notifyListeners();
+      return true;
     });
   }
 }
@@ -84,11 +90,12 @@ mixin BooksModel on ConnectedBooksModel {
     return _showFavorites;
   }
 
-  int get selectedBookIndex { 
+  int get selectedBookIndex {
     return _books.indexWhere((Book book) {
       return book.id == _selBookId;
     });
   }
+
   Future<Null> updateBook(String title, String description, String author,
       String image, double price) {
     final Map<String, dynamic> updateData = {
@@ -185,6 +192,7 @@ mixin BooksModel on ConnectedBooksModel {
       _books = fetchBookList;
       _isLoading = false;
       notifyListeners();
+      _selBookId = null;
     });
   }
 

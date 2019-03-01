@@ -167,9 +167,26 @@ class _BookEditState extends State<BookEdit> {
         _formData['author'],
         _formData['image'],
         _formData['price'],
-      ).then((_) {
-        Navigator.pushReplacementNamed(context, '/books')
-            .then((_) => setSelectedBook(null));
+      ).then((bool success) {
+        if (success) {
+          Navigator.pushReplacementNamed(context, '/books')
+              .then((_) => setSelectedBook(null));
+        } else {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Error"),
+                  content: Text("Intenta más tarde"),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text("Ok"),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                );
+              });
+        }
       });
     } else {
       updateBook(
@@ -191,7 +208,7 @@ class _BookEditState extends State<BookEdit> {
       builder: (BuildContext context, Widget child, MainModel model) {
         final Widget pageContent =
             _buildPageContent(context, model.selectedBook);
-            print(model.selectedBookIndex);
+        print(model.selectedBookIndex);
         return model.selectedBookIndex == -1
             ? pageContent
             : Scaffold(
