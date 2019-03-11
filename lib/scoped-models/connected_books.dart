@@ -19,7 +19,7 @@ class ConnectedBooksModel extends Model {
   bool _isLoading = false;
 
   Future<bool> addBook(String title, String description, String author,
-      String image, double price) {
+      String image, double price) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> bookData = {
@@ -27,35 +27,34 @@ class ConnectedBooksModel extends Model {
       'description': description,
       'author': author,
       'image':
-          'https://a.1stdibscdn.com/archivesE/upload/8141/932/XXX_8141_1349205668_1.jpg',
+          'https://s3-us-west-1.amazonaws.com/cdn.rebootproject.mx/amatl/image_404.jpg',
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id
     };
-    return http
-        .post('https://amatl-72008.firebaseio.com/books.json',
-            body: json.encode(bookData))
-        .then((http.Response response) {
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        _isLoading = false;
-        notifyListeners();
-        return false;
-      }
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      final Book newProduct = Book(
-          id: responseData['name'],
-          title: title,
-          description: description,
-          author: author,
-          image: image,
-          price: price,
-          userEmail: _authenticatedUser.email,
-          userId: _authenticatedUser.id);
-      _books.add(newProduct);
+    final http.Response response = await http.post(
+        'https://amatl-72008.firebaseio.com/books.json',
+        body: json.encode(bookData));
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
       _isLoading = false;
       notifyListeners();
-      return true;
-    });
+      return false;
+    }
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    final Book newProduct = Book(
+        id: responseData['name'],
+        title: title,
+        description: description,
+        author: author,
+        image: image,
+        price: price,
+        userEmail: _authenticatedUser.email,
+        userId: _authenticatedUser.id);
+    _books.add(newProduct);
+    _isLoading = false;
+    notifyListeners();
+    return true;
   }
 }
 
@@ -96,8 +95,8 @@ mixin BooksModel on ConnectedBooksModel {
     });
   }
 
-  Future<Null> updateBook(String title, String description, String author,
-      String image, double price) {
+  Future<bool> updateBook(String title, String description, String author,
+      String image, double price) async {
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
@@ -108,38 +107,46 @@ mixin BooksModel on ConnectedBooksModel {
       'userEmail': selectedBook.userEmail,
       'userId': selectedBook.userId
     };
-    return http
-        .put('https://amatl-72008.firebaseio.com/books/${selectedBook.id}.json',
-            body: jsonEncode(updateData))
-        .then((_) {
+    final http.Response response = await http.put(
+        'https://amatl-72008.firebaseio.com/books/${selectedBook.id}.json',
+        body: jsonEncode(updateData));
+    if (response.statusCode != 200 && response.statusCode != 201) {
       _isLoading = false;
-      final Book updatedBook = Book(
-          id: selectedBook.id,
-          title: title,
-          description: description,
-          author: author,
-          image: image,
-          price: price,
-          userEmail: selectedBook.userEmail,
-          userId: selectedBook.userId);
-      _books[selectedBookIndex] = updatedBook;
       notifyListeners();
-    });
+      return false;
+    }
+
+    final Book updatedBook = Book(
+        id: selectedBook.id,
+        title: title,
+        description: description,
+        author: author,
+        image: image,
+        price: price,
+        userEmail: selectedBook.userEmail,
+        userId: selectedBook.userId);
+    _isLoading = false;
+    _books[selectedBookIndex] = updatedBook;
+    notifyListeners();
+    return true;
   }
 
-  void deleteBook() {
+  Future<bool> deleteBook() async {
     _isLoading = true;
     final String deletedBookId = selectedBook.id;
     _books.removeAt(selectedBookIndex);
     _selBookId = null;
     notifyListeners();
-    http
-        .delete(
-            'https://amatl-72008.firebaseio.com/books/${deletedBookId}.json')
-        .then((http.Response response) {
+    final http.Response response = await http.delete(
+        'https://amatl-72008.firebaseio.com/books/${deletedBookId}.json');
+    if (response.statusCode != 200 && response.statusCode != 201) {
       _isLoading = false;
       notifyListeners();
-    });
+      return false;
+    }
+    _isLoading = false;
+    notifyListeners();
+    return true;
   }
 
   void toggleBookFavoriteStatus() {
