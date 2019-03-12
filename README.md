@@ -1,15 +1,8 @@
-# Amatl
-## Version 0.4.5
+# Amatl Version 0.6
 
-Info:
+Aplicación para administrar y compartir tu biblioteca personal, este proyecto se creo para un curso de Flutter y Firebase
 
-A partir de la version 0.4.5 se utilizan ids primarios en strings
-Biblioteca personal - Proyecto para un curso de Flutter.
-El proyecto se conecta a una DB de Google Firebase.
-
-### Notas de esta version
-
-    El CRUD de libros esta completo
-    En la pagina principal se recarga jalando la pantalla hacia abajo
-    Cambio de colores
-    Cambio de appicon
+**TODO:** 
+- Desarrollando login y registro
+- Hay una bronca en la navegacion un tipo de variable
+- Limpiar el formulario de edicion y creación de libros
