@@ -214,6 +214,29 @@ class UserModel extends ConnectedBooksModel {
     _authenticatedUser =
         User(id: 'fdalsdfasf', email: email, password: password);
   }
+
+  Future<Map<String, dynamic>> signup(String email, String password) async {
+    final Map<String, dynamic> authData = {
+      'email': email,
+      'password': password,
+      'returnSecureToken': true
+    };
+    final http.Response response = await http.post(
+        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBhBlsHUcyyoO0p9znMRCARYlU4GCkMn70',
+        body: json.encode(authData),
+        headers: {'Content-Type': 'application/json'});
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    bool hasError = true;
+    String message = "Ocurrió un error";
+    if (responseData.containsKey('idToken')) {
+      hasError = false;
+      message = "Operación completada";
+    } else {
+      message = "El email ya existe";
+    }
+    print(json.decode(response.body));
+    return {'success': hasError, 'message': message};
+  }
 }
 
 class UtilityModel extends ConnectedBooksModel {
